@@ -1,0 +1,157 @@
+/* ==========================================================================
+   FindIt — Motion system
+   Every animation here is transform/opacity only so it stays on the
+   compositor. Scroll reveals are one-shot and gated on prefers-reduced-motion.
+   ========================================================================== */
+
+/* ---- Ambient loops ------------------------------------------------ */
+@keyframes drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(9vmax, 6vmax, 0) scale(1.18); }
+}
+
+@keyframes drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.05); }
+  to   { transform: translate3d(-8vmax, 9vmax, 0) scale(0.92); }
+}
+
+@keyframes drift-c {
+  from { transform: translate3d(0, 0, 0) scale(0.95); }
+  to   { transform: translate3d(7vmax, -7vmax, 0) scale(1.15); }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(0, -12px, 0); }
+}
+
+@keyframes float-tilt {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(-1.2deg); }
+  50%      { transform: translate3d(0, -14px, 0) rotate(1.2deg); }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 0.9;  transform: scale(1.06); }
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes sheen {
+  0%   { transform: translate3d(-140%, 0, 0) skewX(-18deg); }
+  60%,
+  100% { transform: translate3d(240%, 0, 0) skewX(-18deg); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(61, 91, 255, 0.35); }
+  70%  { box-shadow: 0 0 0 14px rgba(61, 91, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(61, 91, 255, 0); }
+}
+
+@keyframes pop-in {
+  0%   { opacity: 0; transform: scale(0.9) translate3d(0, 10px, 0); }
+  100% { opacity: 1; transform: scale(1) translate3d(0, 0, 0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translate3d(0, -10px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+
+@keyframes slide-in-right {
+  from { transform: translate3d(100%, 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes marquee-x {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+@keyframes gradient-pan {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translate3d(0, 16px, 0) scale(0.96); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/* ---- Scroll reveal ------------------------------------------------ */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition:
+    opacity 0.7s var(--ease-out),
+    transform 0.7s var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-reveal="left"]  { transform: translate3d(-26px, 0, 0); }
+.reveal[data-reveal="right"] { transform: translate3d(26px, 0, 0); }
+.reveal[data-reveal="zoom"]  { transform: scale(0.94); }
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Animation utility classes ------------------------------------ */
+.anim-float      { animation: float-y 6s ease-in-out infinite; }
+.anim-float-tilt { animation: float-tilt 9s ease-in-out infinite; }
+.anim-breathe    { animation: breathe 7s ease-in-out infinite; }
+.anim-spin-slow  { animation: spin-slow 26s linear infinite; }
+.anim-pop        { animation: pop-in 0.42s var(--ease-spring) both; }
+.anim-toast-in   { animation: toast-in 0.34s var(--ease-spring) both; }
+.anim-slide-down { animation: slide-down 0.28s var(--ease-out) both; }
+.anim-gradient   { background-size: 220% 220%; animation: gradient-pan 9s ease infinite; }
+
+/* Delay steps used for staggered groups */
+.d-1 { --reveal-delay: 70ms; }
+.d-2 { --reveal-delay: 140ms; }
+.d-3 { --reveal-delay: 210ms; }
+.d-4 { --reveal-delay: 280ms; }
+.d-5 { --reveal-delay: 350ms; }
+.d-6 { --reveal-delay: 420ms; }
+
+/* ---- Marquee ticker ------------------------------------------------ */
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-x 42s linear infinite;
+}
+
+.marquee-track:hover .marquee {
+  animation-play-state: paused;
+}
+
+/* ---- Reduced motion ------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

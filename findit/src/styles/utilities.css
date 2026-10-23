@@ -1,0 +1,588 @@
+/* ==========================================================================
+   FindIt — Component classes (glass surfaces, buttons, form controls)
+   ========================================================================== */
+
+@layer components {
+  .container-page {
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  /* ---- Glass primitives ------------------------------------------- */
+  .glass,
+  .glass-card,
+  .glass-nav,
+  .glass-panel,
+  .glass-modal,
+  .glass-float {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-edge);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .glass,
+    .glass-card,
+    .glass-nav,
+    .glass-panel,
+    .glass-modal,
+    .glass-float {
+      backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(150%);
+    }
+  }
+
+  .glass {
+    border-radius: var(--radius-md);
+  }
+
+  .glass-nav {
+    background: var(--glass-bg-strong);
+    border-bottom: 1px solid var(--glass-border);
+    transition: box-shadow var(--dur) ease, background-color var(--dur) ease;
+  }
+
+  .glass-nav.is-scrolled {
+    box-shadow: 0 12px 40px -18px rgba(16, 23, 49, 0.35), inset 0 1px 0 var(--glass-edge);
+  }
+
+  .glass-panel {
+    border-radius: var(--radius-lg);
+    background: var(--glass-bg-strong);
+  }
+
+  .glass-card {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out),
+      border-color var(--dur) ease;
+  }
+
+  /* Soft light that fades in on hover — transform-free, so it never janks. */
+  .glass-card::after {
+    content: "";
+    position: absolute;
+    inset: -40% -20% auto;
+    height: 70%;
+    background: radial-gradient(60% 100% at 50% 0%, var(--glass-tint-top), transparent 70%);
+    opacity: 0;
+    transition: opacity var(--dur) ease;
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    .glass-card:hover {
+      transform: translate3d(0, -5px, 0);
+      border-color: color-mix(in srgb, var(--color-primary) 45%, transparent);
+      box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-edge);
+    }
+
+    .glass-card:hover::after {
+      opacity: 1;
+    }
+  }
+
+  .glass-float {
+    background: var(--glass-bg-strong);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-md), inset 0 1px 0 var(--glass-edge);
+  }
+
+  .glass-modal {
+    background: var(--glass-bg-strong);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-edge);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .glass-modal {
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+    }
+  }
+
+  /* Gradient hairline used to separate premium sections. */
+  .hairline {
+    height: 1px;
+    border: 0;
+    background: var(--grad-hairline);
+    opacity: 0.8;
+  }
+
+  /* ---- Solid surfaces ---------------------------------------------- */
+  .surface-card {
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ---- Item cards --------------------------------------------------- */
+  .item-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow), inset 0 1px 0 var(--glass-edge);
+    transition: transform var(--dur) var(--ease-out), box-shadow var(--dur) var(--ease-out),
+      border-color var(--dur) ease;
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .item-card {
+      backdrop-filter: blur(14px) saturate(150%);
+      -webkit-backdrop-filter: blur(14px) saturate(150%);
+    }
+  }
+
+  @media (hover: hover) {
+    .item-card:hover {
+      transform: translate3d(0, -6px, 0);
+      border-color: color-mix(in srgb, var(--color-primary) 42%, transparent);
+      box-shadow: var(--shadow-lg), inset 0 1px 0 var(--glass-edge);
+    }
+
+    .item-card:hover .item-thumb-img {
+      transform: scale(1.07);
+    }
+  }
+
+  .item-thumb {
+    position: relative;
+    height: 168px;
+    overflow: hidden;
+    background: var(--grad-brand-soft);
+  }
+
+  .item-thumb-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  /* ---- Buttons ----------------------------------------------------- */
+  .btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.925rem;
+    letter-spacing: -0.01em;
+    border-radius: var(--radius-full);
+    padding: 0.72rem 1.35rem;
+    transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur) ease,
+      background-color var(--dur) ease, color var(--dur) ease, border-color var(--dur) ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .btn:active {
+    transform: scale(0.96);
+  }
+
+  .btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-primary {
+    background: var(--grad-brand);
+    background-size: 180% 180%;
+    color: #fff;
+    box-shadow: var(--shadow-glow);
+    transition: transform var(--dur-fast) var(--ease-spring), box-shadow var(--dur) ease,
+      background-position 0.6s var(--ease-out);
+  }
+
+  /* Travelling highlight; the pseudo element is clipped by .btn's overflow. */
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 45%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+    transform: translate3d(-160%, 0, 0) skewX(-18deg);
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    .btn-primary:hover:not(:disabled) {
+      background-position: 100% 50%;
+      box-shadow: 0 22px 52px -16px rgba(61, 91, 255, 0.62);
+    }
+
+    .btn-primary:hover:not(:disabled)::before {
+      animation: sheen 0.9s var(--ease-out);
+    }
+  }
+
+  .btn-secondary {
+    background: var(--glass-bg);
+    color: var(--color-text);
+    border-color: var(--glass-border);
+    box-shadow: inset 0 1px 0 var(--glass-edge);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .btn-secondary {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--color-primary) 55%, transparent);
+    color: var(--color-primary);
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-text-soft);
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background: var(--color-primary-soft);
+    color: var(--color-primary);
+  }
+
+  .btn-danger {
+    background: var(--color-danger);
+    color: #fff;
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    filter: brightness(0.94);
+  }
+
+  /* Quieter delete affordance for dense lists — fills in on hover. */
+  .btn-danger-soft {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+    border-color: color-mix(in srgb, var(--color-danger) 24%, transparent);
+  }
+
+  .btn-danger-soft:hover:not(:disabled) {
+    background: var(--color-danger);
+    color: #fff;
+    border-color: transparent;
+  }
+
+  .btn-gold {
+    background: var(--grad-gold);
+    color: #3d2a05;
+    box-shadow: var(--shadow-gold);
+  }
+
+  @media (hover: hover) {
+    .btn-gold:hover:not(:disabled) {
+      transform: translate3d(0, -2px, 0);
+      filter: brightness(1.05);
+    }
+  }
+
+  .btn-sm {
+    padding: 0.48rem 0.95rem;
+    font-size: 0.82rem;
+  }
+
+  .btn-lg {
+    padding: 0.95rem 1.7rem;
+    font-size: 1rem;
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    color: var(--color-text-soft);
+    box-shadow: inset 0 1px 0 var(--glass-edge);
+    transition: color var(--dur) ease, border-color var(--dur) ease, transform var(--dur-fast) var(--ease-spring);
+    cursor: pointer;
+  }
+
+  .icon-btn:hover {
+    color: var(--color-primary);
+    border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .icon-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .icon-btn:disabled:hover {
+    color: var(--color-text-soft);
+    border-color: var(--glass-border);
+    transform: none;
+  }
+
+  .page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.1rem;
+    height: 2.1rem;
+    padding: 0 0.45rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--color-text-soft);
+    cursor: pointer;
+    transition: color var(--dur-fast) ease, background var(--dur-fast) ease, transform var(--dur-fast) var(--ease-spring);
+  }
+
+  .page-btn:hover {
+    color: var(--color-primary);
+    background: var(--color-primary-soft);
+    transform: translate3d(0, -1px, 0);
+  }
+
+  .page-btn.is-current {
+    background: var(--grad-brand);
+    background-size: 220% 100%;
+    color: #fff;
+    box-shadow: var(--shadow-glow);
+  }
+
+  .page-btn.is-current:hover {
+    color: #fff;
+    transform: none;
+  }
+
+  /* ---- Forms ------------------------------------------------------- */
+  .field-label {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.4rem;
+  }
+
+  .field-hint {
+    font-size: 0.78rem;
+    color: var(--color-text-soft);
+    margin-top: 0.35rem;
+  }
+
+  .field-error {
+    font-size: 0.78rem;
+    color: var(--color-danger);
+    margin-top: 0.35rem;
+    font-weight: 500;
+    animation: slide-down 0.24s var(--ease-out) both;
+  }
+
+  .input-field {
+    width: 100%;
+    background: var(--glass-bg-subtle);
+    border: 1px solid var(--glass-border);
+    color: var(--color-text);
+    border-radius: var(--radius-sm);
+    padding: 0.72rem 0.95rem;
+    font-size: 0.925rem;
+    box-shadow: inset 0 1px 2px rgba(16, 23, 49, 0.05);
+    transition: border-color var(--dur) ease, box-shadow var(--dur) ease, background-color var(--dur) ease;
+  }
+
+  .input-field::placeholder {
+    color: color-mix(in srgb, var(--color-text-soft) 75%, transparent);
+  }
+
+  .input-field:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 4px var(--color-primary-soft), inset 0 1px 2px rgba(16, 23, 49, 0.05);
+    outline: none;
+    background: var(--color-surface);
+  }
+
+  .input-field.has-error {
+    border-color: var(--color-danger);
+  }
+
+  textarea.input-field {
+    resize: vertical;
+    min-height: 104px;
+  }
+
+  select.input-field {
+    appearance: none;
+    background-image: linear-gradient(45deg, transparent 50%, var(--color-text-soft) 50%),
+      linear-gradient(135deg, var(--color-text-soft) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 2.2rem;
+  }
+
+  /* ---- Badges & chips ---------------------------------------------- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.62rem;
+    border-radius: var(--radius-full);
+    border: 1px solid transparent;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .badge-lost {
+    background: var(--color-danger-soft);
+    color: var(--color-danger);
+    border-color: color-mix(in srgb, var(--color-danger) 26%, transparent);
+  }
+
+  .badge-found {
+    background: var(--color-success-soft);
+    color: var(--color-success);
+    border-color: color-mix(in srgb, var(--color-success) 26%, transparent);
+  }
+
+  .badge-resolved {
+    background: rgba(95, 108, 136, 0.16);
+    color: var(--color-text-soft);
+    border-color: var(--color-border);
+  }
+
+  .badge-demo {
+    background: var(--color-warning-soft);
+    color: var(--color-warning);
+    border-color: color-mix(in srgb, var(--color-warning) 26%, transparent);
+  }
+
+  .badge-valuable {
+    background: var(--grad-gold);
+    color: #3d2a05;
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: var(--shadow-gold);
+    letter-spacing: 0.06em;
+  }
+
+  .badge-gold {
+    background: var(--color-gold-soft);
+    color: var(--color-gold);
+    border-color: color-mix(in srgb, var(--color-gold) 30%, transparent);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.46rem 0.9rem;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg-subtle);
+    color: var(--color-text-soft);
+    cursor: pointer;
+    transition: color var(--dur) ease, border-color var(--dur) ease, transform var(--dur-fast) var(--ease-spring),
+      background-color var(--dur) ease;
+  }
+
+  .chip:hover {
+    border-color: color-mix(in srgb, var(--color-primary) 50%, transparent);
+    color: var(--color-primary);
+    transform: translate3d(0, -2px, 0);
+  }
+
+  .chip.active {
+    background: var(--grad-brand);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* ---- Text helpers ------------------------------------------------- */
+  .text-gradient {
+    background: var(--grad-text);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: gradient-pan 12s ease infinite;
+  }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-display);
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+  }
+
+  .section-title {
+    font-size: clamp(1.35rem, 1.1rem + 1.1vw, 1.9rem);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  /* ---- Misc --------------------------------------------------------- */
+  .divider {
+    height: 1px;
+    background: var(--color-border);
+    border: none;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--color-border) 25%, rgba(255, 255, 255, 0.4) 50%, var(--color-border) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: var(--radius-sm);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .scrim {
+    background: var(--scrim);
+  }
+
+  @supports (backdrop-filter: blur(1px)) {
+    .scrim {
+      backdrop-filter: blur(10px) saturate(120%);
+      -webkit-backdrop-filter: blur(10px) saturate(120%);
+    }
+  }
+}
